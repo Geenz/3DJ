@@ -31,14 +31,23 @@ jobs:
         id: generateMatrix
         #Multiline string for dumb reasons
         run: |
-          TEMP=""
-          for package in $(find Packages -maxdepth 1 -mindepth 1 -type d -name "${{ env.packagePrefix }}.${{ steps.getRepoOwner.outputs.prop }}*"); do
-            packageID=${package##*/}
-            TEMP="$TEMP\"$packageID\", "
-          done
-          TEMP=${TEMP::-2}
-          TEMP="$TEMP"
+          if [ -n "${{ vars.PACKAGE_NAME }}" ]; then
+            TEMP="\"${{ vars.PACKAGE_NAME }}\""
+          else
+            TEMP=""
+            for package in $(find Packages -maxdepth 1 -mindepth 1 -type d -name "${{ env.packagePrefix }}.${{ steps.getRepoOwner.outputs.prop }}*"); do
+              packageID=${package##*/}
+              TEMP="$TEMP\"$packageID\", "
+            done
+            if [ -n "$TEMP" ]; then
+              TEMP=${TEMP::-2}
+            fi
+            TEMP="$TEMP"
+          fi
           echo "matrix=[$TEMP]" >> $GITHUB_OUTPUT
+          if [ -z "$TEMP" ]; then
+            echo "No package found. Set the PACKAGE_NAME repository variable to select one." >> $GITHUB_STEP_SUMMARY
+          fi
       - name: Output Matrix
         run: echo ${{ steps.generateMatrix.outputs.matrix }}
 
