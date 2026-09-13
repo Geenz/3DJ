@@ -1,0 +1,131 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!21 &2100000
+Material:
+  serializedVersion: 8
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: SurfelPlaybackDecode
+  m_Shader: {fileID: 4800000, guid: d70d3eaf98c24dd19e26b0021eeadc27, type: 3}
+  m_Parent: {fileID: 0}
+  m_ModifiedSerializedProperties: 0
+  m_ValidKeywords:
+  - _DITHER_FRACTAL
+  - _MODE_DITHER
+  m_InvalidKeywords:
+  - _HULL_ON
+  - _SHEAR_ON
+  - _SOURCE_THREEDJ
+  m_LightmapFlags: 4
+  m_EnableInstancingVariants: 0
+  m_DoubleSidedGI: 0
+  m_CustomRenderQueue: 2450
+  stringTagMap: {}
+  disabledShaderPasses: []
+  m_LockedProperties: 
+  m_SavedProperties:
+    serializedVersion: 3
+    m_TexEnvs:
+    - _Band0:
+        m_Texture: {fileID: 8600000, guid: 8816408dd339434408e833a39330170d, type: 2}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _Band1:
+        m_Texture: {fileID: 8600000, guid: 2fc056076e63f5f49849b667613db859, type: 2}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _BlueNoise:
+        m_Texture: {fileID: 2800000, guid: 818f3a58b726407ea969424715b6df99, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _CamTex:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _DitherRampTex:
+        m_Texture: {fileID: 2800000, guid: 419773c4530aa874ca10a245f0675350, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _DitherTex:
+        m_Texture: {fileID: 11700000, guid: f8c14933cd8df41c29224daa7bcca430, type: 2}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _FalloffTex:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _Meta:
+        m_Texture: {fileID: 8600000, guid: e10cc18b0fe219a40a0854b0998733ab, type: 2}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _MetaSplat:
+        m_Texture: {fileID: 8600000, guid: cf7f4555add830d4c8ba6c7ab6d5edd6, type: 2}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _Strip3DJ:
+        m_Texture: {fileID: 8600000, guid: 26f3b3c898d5f1c4786f1352e55767b5, type: 2}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _SurfelColor:
+        m_Texture: {fileID: 8600000, guid: 96da83ce5209ed54fbd4b09af0318f1a, type: 2}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _SurfelDepth:
+        m_Texture: {fileID: 8600000, guid: cc99f004f8377944aa351a36924d3129, type: 2}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    m_Ints: []
+    m_Floats:
+    - _AccScale: 0.125
+    - _BlueNoiseJitter: 0
+    - _BlueNoiseMix: 0.05125
+    - _BlueNoiseOn: 0
+    - _CenterY: 1
+    - _Contrast: 1
+    - _Cutoff: 0.5
+    - _DepthDither: 1
+    - _DepthOffset: 4
+    - _Dither: 2
+    - _DstBlend: 0
+    - _FadeDistance: 0.1
+    - _FadeMultiplier: 1
+    - _Falloff: 1.3
+    - _FalloffMult: 2
+    - _GrazingCutoff: 0.3
+    - _HullClip: 0
+    - _HullFeather: 0
+    - _HullOn: 1
+    - _HullThreshold: 0
+    - _IgnoreGlobalPlaybackControl: 0
+    - _InputExposure: 1
+    - _InputOffset: 0
+    - _LockPosition: 0
+    - _LockRotation: 0
+    - _LodDistance: 8
+    - _MaxStretch: 2
+    - _Mode: 2
+    - _Radius: 1
+    - _Scale: 5
+    - _SeamBlend: 1
+    - _Shape: 0
+    - _ShearOn: 1
+    - _SizeVariability: 0
+    - _SizeX: 4
+    - _SizeY: 3
+    - _SizeZ: 4
+    - _Source: 2
+    - _SrcBlend: 1
+    - _StencilComp: 8
+    - _StencilRef: 0
+    - _StretchSmoothness: 0
+    - _Stride: 1
+    - _UseFalloffTex: 0
+    - _ZWrite: 1
+    m_Colors:
+    - _Atlas: {r: 512, g: 256, b: 0.001953125, a: 0.00390625}
+    - _Capsule: {r: 0, g: 2, b: 0, a: 2}
+    - _CodeRange: {r: 0, g: 0.99607843, b: 0.99803925, a: 0}
+    - _Tile: {r: 64, g: 64, b: 8, a: 8}
+  m_BuildTextureStacks: []
