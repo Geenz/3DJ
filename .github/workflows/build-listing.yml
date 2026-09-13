@@ -50,19 +50,22 @@ jobs:
 
       - name: Resolve Listing URL
         run: |
-          if [ -n "${{ vars.LISTING_URL }}" ]; then
-            listingUrl="${{ vars.LISTING_URL }}"
-            jq --arg url "$listingUrl" --arg repo "${{ github.repository }}" '.url = $url | .githubRepos = [$repo]' source.json > source.json.tmp
-            mv source.json.tmp source.json
-            echo "Listing URL: \`$listingUrl\` (from LISTING_URL)" >> $GITHUB_STEP_SUMMARY
-          else
-            listingUrl=$(jq -r '.url' source.json)
-            echo "Listing URL: \`$listingUrl\` (from source.json)" >> $GITHUB_STEP_SUMMARY
-            # warn since source.json's repo list will not include this fork until LISTING_URL is set
-            if ! jq -e --arg repo "${{ github.repository }}" '.githubRepos | index($repo)' source.json > /dev/null; then
-              echo "Warning: the listing will carry source.json's URL until LISTING_URL is set." >> $GITHUB_STEP_SUMMARY
-            fi
+          owner=$(echo '${{ github.repository_owner }}' | tr '[:upper:]' '[:lower:]')
+          listingUrl="${{ vars.LISTING_URL }}"
+          urlSource="LISTING_URL"
+          if [ -z "$listingUrl" ]; then
+            listingUrl="https://$owner.github.io/${{ github.event.repository.name }}/index.json"
+            urlSource="repository default"
           fi
+          authorName="${{ vars.LISTING_AUTHOR }}"
+          authorSource="LISTING_AUTHOR"
+          if [ -z "$authorName" ]; then
+            authorName='${{ github.repository_owner }}'
+            authorSource="repository owner"
+          fi
+          jq --arg url "$listingUrl" --arg repo "${{ github.repository }}" --arg author "$authorName" '.url = $url | .githubRepos = [$repo] | .author.name = $author' source.json > source.json.tmp && mv source.json.tmp source.json
+          echo "Listing URL: \`$listingUrl\` (from $urlSource)" >> $GITHUB_STEP_SUMMARY
+          echo "Author: \`$authorName\` (from $authorSource)" >> $GITHUB_STEP_SUMMARY
           echo "listingUrl=$listingUrl" >> $GITHUB_ENV
 
       - name: Build Package Version Listing
@@ -83,7 +86,7 @@ jobs:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
     runs-on: ubuntu-latest
-    if: vars.PUBLISH_PAGES == 'true'
+    if: vars.PUBLISH_PAGES != 'false'
     steps:
 
       - name: Download Listing Artifact
@@ -93,7 +96,9 @@ jobs:
           path: ${{env.listPublishDirectory}}
 
       - name: Setup Pages
-        uses: actions/configure-pages@v3
+        uses: actions/configure-pages@v5
+        with:
+          enablement: true
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3

@@ -10,7 +10,6 @@ on:
 
 env:
   releaseTemplate: "RELEASE TEMPLATE.md"
-  packagePrefix: "com"
 
 permissions:
   contents: write
@@ -24,9 +23,6 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v3
-      - name: Get Repo Owner
-        id: getRepoOwner
-        run: echo prop=$(echo '${{ github.repository_owner }}' | tr '[:upper:]' '[:lower:]') >> $GITHUB_OUTPUT #grab the repo owner and make it lowercase
       - name: Set Matrix
         id: generateMatrix
         #Multiline string for dumb reasons
@@ -35,9 +31,11 @@ jobs:
             TEMP="\"${{ vars.PACKAGE_NAME }}\""
           else
             TEMP=""
-            for package in $(find Packages -maxdepth 1 -mindepth 1 -type d -name "${{ env.packagePrefix }}.${{ steps.getRepoOwner.outputs.prop }}*"); do
-              packageID=${package##*/}
-              TEMP="$TEMP\"$packageID\", "
+            for package in $(find Packages -maxdepth 2 -mindepth 2 -name package.json); do
+              packageID=$(basename "$(dirname "$package")")
+              if ! jq -e --arg name "$packageID" '.locked | has($name)' Packages/vpm-manifest.json > /dev/null; then
+                TEMP="$TEMP\"$packageID\", "
+              fi
             done
             if [ -n "$TEMP" ]; then
               TEMP=${TEMP::-2}
