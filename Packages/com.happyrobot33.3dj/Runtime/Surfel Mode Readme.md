@@ -90,12 +90,12 @@ Reject depth edges entirely.
 Drop texels other faces contradict.
 
 * Reproject tolerance
-  * Contradiction slack, in metres
+  * Contradiction slack, in meters
 * Contradicting faces to reject
   * How many faces must disagree
 
 * Fit window radius
-  * Plane fit neighbourhood size
+  * Plane fit neighborhood size
 
 #### Adaptive radius
 
@@ -106,7 +106,7 @@ Scale surfels by surface detail.
 * Radius max
   * Multiplier where surface is flat
 * Detail scale
-  * Residual that means "detailed", metres
+  * Residual that means "detailed", meters
 
 ### Splat (SurfelPlaybackMetaSplat)
 

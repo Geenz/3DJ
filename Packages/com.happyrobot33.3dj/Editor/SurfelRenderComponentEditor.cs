@@ -64,6 +64,10 @@ namespace com.happyrobot33.holographicreprojector.Editor {
                 return;
             }
 
+            if (manager.playbackMode == PlaybackMode.Standard) {
+                return;
+            }
+
             if (!EnsureGenFolder()) {
                 return;
             }
@@ -108,11 +112,11 @@ namespace com.happyrobot33.holographicreprojector.Editor {
 
             Vector2Int size = manager.DepthTextureSize;
             Vector2Int colorSize = manager.ColorTextureSize;
-            CustomRenderTexture depthCrt = EnsureCrt(DepthCrtPath, size.x, size.y, manager.DepthExtractTexture.format, snapshotMat, Color.clear, 0);
-            CustomRenderTexture colorCrt = EnsureCrt(ColorCrtPath, colorSize.x, colorSize.y, manager.ColorExtractTexture.format, snapshotMat, Color.clear, 1);
-            CustomRenderTexture stripCrt = EnsureCrt(StripCrtPath, 2, 1, RenderTextureFormat.ARGBFloat, stripMat, Color.clear, 0);
-            CustomRenderTexture metaFitCrt = EnsureCrt(MetaFitCrtPath, size.x, size.y, RenderTextureFormat.ARGBHalf, metaMat, MetaEmpty, 0);
-            CustomRenderTexture metaSplatCrt = EnsureCrt(MetaSplatCrtPath, size.x, size.y, RenderTextureFormat.ARGBHalf, splatMat, Color.clear, 0);
+            CustomRenderTexture depthCrt = EnsureCrt(DepthCrtPath, size.x, size.y, manager.DepthExtractTexture.format, snapshotMat, Color.clear, 0, CustomRenderTextureUpdateMode.Realtime);
+            CustomRenderTexture colorCrt = EnsureCrt(ColorCrtPath, colorSize.x, colorSize.y, manager.ColorExtractTexture.format, snapshotMat, Color.clear, 1, CustomRenderTextureUpdateMode.Realtime);
+            CustomRenderTexture stripCrt = EnsureCrt(StripCrtPath, 2, 1, RenderTextureFormat.ARGBFloat, stripMat, Color.clear, 0, CustomRenderTextureUpdateMode.Realtime);
+            CustomRenderTexture metaFitCrt = EnsureCrt(MetaFitCrtPath, size.x, size.y, RenderTextureFormat.ARGBHalf, metaMat, MetaEmpty, 0, CustomRenderTextureUpdateMode.Realtime);
+            CustomRenderTexture metaSplatCrt = EnsureCrt(MetaSplatCrtPath, size.x, size.y, RenderTextureFormat.ARGBHalf, splatMat, Color.clear, 0, CustomRenderTextureUpdateMode.Realtime);
 
             if (!WireMaterials(decodeMat, metaMat, splatMat, stripCrt, metaFitCrt, metaSplatCrt, depthCrt, colorCrt, component.stride)) {
                 return;
@@ -171,13 +175,7 @@ namespace com.happyrobot33.holographicreprojector.Editor {
 
             updateTextureInternals.Invoke(null, new object[] { manager });
 
-            GameObject previous = manager.mainPlaybackCube;
             AssignPlaybackObject(manager, component.gameObject);
-
-            if (previous != null && previous != component.gameObject) {
-                Undo.RecordObject(previous, "Disable Previous Playback Object");
-                previous.SetActive(false);
-            }
         }
 
         public static bool EnsureGenFolder() {
@@ -198,13 +196,13 @@ namespace com.happyrobot33.holographicreprojector.Editor {
             return false;
         }
 
-        public static CustomRenderTexture EnsureCrt(string path, int width, int height, RenderTextureFormat format, Material material, Color initColor, int shaderPass) {
+        public static CustomRenderTexture EnsureCrt(string path, int width, int height, RenderTextureFormat format, Material material, Color initColor, int shaderPass, CustomRenderTextureUpdateMode updateMode) {
             CustomRenderTexture crt = AssetDatabase.LoadAssetAtPath<CustomRenderTexture>(path);
 
             if (crt == null) {
                 crt = new CustomRenderTexture(width, height, format, RenderTextureReadWrite.Linear) {
                     depthStencilFormat = UnityEngine.Experimental.Rendering.GraphicsFormat.None,
-                    updateMode = CustomRenderTextureUpdateMode.Realtime,
+                    updateMode = updateMode,
                     initializationMode = CustomRenderTextureUpdateMode.OnLoad,
                     initializationSource = CustomRenderTextureInitializationSource.TextureAndColor,
                     initializationColor = initColor,
@@ -227,7 +225,7 @@ namespace com.happyrobot33.holographicreprojector.Editor {
                 crt.Create();
             }
 
-            crt.updateMode = CustomRenderTextureUpdateMode.Realtime;
+            crt.updateMode = updateMode;
             crt.initializationMode = CustomRenderTextureUpdateMode.OnLoad;
             crt.initializationSource = CustomRenderTextureInitializationSource.TextureAndColor;
             crt.initializationColor = initColor;
@@ -503,10 +501,10 @@ namespace com.happyrobot33.holographicreprojector.Editor {
 
         public static void AssignPlaybackObject(Manager manager, GameObject playbackObject) {
             SerializedObject serialized = new SerializedObject(manager);
-            SerializedProperty property = serialized.FindProperty("mainPlaybackCube");
+            SerializedProperty property = serialized.FindProperty("surfelPlaybackObject");
 
             if (property == null) {
-                Debug.LogError("Surfel Playback: Manager has no mainPlaybackCube field.");
+                Debug.LogError("Surfel Playback: Manager has no surfelPlaybackObject field.");
                 return;
             }
 

@@ -9,9 +9,9 @@ Shader "SurfelAtlas/Meta" {
         [Header(Fit)]
         [Tooltip(Drop texels other faces contradict.)]
         [Toggle(_REPROJECT_ON)] _ReprojectOn ("Reprojection reject", Float) = 1
-        [Tooltip(Plane fit neighbourhood size)]
+        [Tooltip(Plane fit neighborhood size)]
         [KeywordEnum(R1, R2, R3, R4)] _FitWindow ("Fit window radius", Float) = 1
-        [Tooltip(Contradiction slack, in metres)]
+        [Tooltip(Contradiction slack, in meters)]
         _ReprojectTolerance ("Reproject tolerance (m)", Float) = 0.02
         [Tooltip(How many faces must disagree)]
         _ReprojectViews ("Contradicting faces to reject", Int) = 1
@@ -23,7 +23,7 @@ Shader "SurfelAtlas/Meta" {
         _RadiusMin ("Radius min", Float) = 1
         [Tooltip(Multiplier where surface is flat)]
         _RadiusMax ("Radius max", Float) = 1
-        [Tooltip(Residual that means detailed, metres)]
+        [Tooltip(Residual that means detailed, meters)]
         _DetailScale ("Detail scale (m)", Float) = 0.02
 
         [HideInInspector] _Strip3DJ ("", 2D) = "black" {}

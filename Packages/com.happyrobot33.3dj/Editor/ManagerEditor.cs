@@ -270,6 +270,70 @@ namespace com.happyrobot33.holographicreprojector.Editor
             manager._SetupGlobalTextures();
 
             manager._ConfigureShaderForPlayback();
+
+            CustomRenderTextureUpdateMode upscaledMode = CustomRenderTextureUpdateMode.OnDemand;
+            CustomRenderTextureUpdateMode surfelMode = CustomRenderTextureUpdateMode.OnDemand;
+            switch (manager.playbackMode)
+            {
+                case PlaybackMode.Both:
+                    upscaledMode = CustomRenderTextureUpdateMode.Realtime;
+                    surfelMode = CustomRenderTextureUpdateMode.Realtime;
+                    break;
+                case PlaybackMode.Standard:
+                    upscaledMode = CustomRenderTextureUpdateMode.Realtime;
+                    break;
+                case PlaybackMode.Surfel:
+                    surfelMode = CustomRenderTextureUpdateMode.Realtime;
+                    break;
+            }
+
+            if (manager.UpscaledColorTexture != null)
+            {
+                if (manager.UpscaledColorTexture.updateMode != upscaledMode)
+                {
+                    manager.UpscaledColorTexture.updateMode = upscaledMode;
+                    EditorUtility.SetDirty(manager.UpscaledColorTexture);
+                }
+            }
+
+            SurfelRenderComponent surfelComponent = null;
+            if (manager.surfelPlaybackObject != null)
+            {
+                surfelComponent = manager.surfelPlaybackObject.GetComponent<SurfelRenderComponent>();
+            }
+
+            if (surfelComponent != null)
+            {
+                if (surfelComponent.strip != null && surfelComponent.strip.updateMode != surfelMode)
+                {
+                    surfelComponent.strip.updateMode = surfelMode;
+                    EditorUtility.SetDirty(surfelComponent.strip);
+                }
+
+                if (surfelComponent.metaFit != null && surfelComponent.metaFit.updateMode != surfelMode)
+                {
+                    surfelComponent.metaFit.updateMode = surfelMode;
+                    EditorUtility.SetDirty(surfelComponent.metaFit);
+                }
+
+                if (surfelComponent.metaSplat != null && surfelComponent.metaSplat.updateMode != surfelMode)
+                {
+                    surfelComponent.metaSplat.updateMode = surfelMode;
+                    EditorUtility.SetDirty(surfelComponent.metaSplat);
+                }
+
+                if (surfelComponent.depth != null && surfelComponent.depth.updateMode != surfelMode)
+                {
+                    surfelComponent.depth.updateMode = surfelMode;
+                    EditorUtility.SetDirty(surfelComponent.depth);
+                }
+
+                if (surfelComponent.color != null && surfelComponent.color.updateMode != surfelMode)
+                {
+                    surfelComponent.color.updateMode = surfelMode;
+                    EditorUtility.SetDirty(surfelComponent.color);
+                }
+            }
         }
 
         private Vector2Int DrawRTArea(Manager manager, Texture texture, Rect ParentRect, GUIStyle imageStyle, Vector2Int topLeft, bool showHandles)

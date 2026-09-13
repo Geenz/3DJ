@@ -478,8 +478,8 @@ Surfel Reconstruct3DJ(appdata v, float push) {
     float sv = h / tileH;
     float3 pLocal = Pos3DJ(k, djScale, (tileU + 0.5) / tileW, (tileV + 0.5) / tileH, Lin3DJ(raw));
 
-    float3 pCentre = RotY3DJ(pLocal, djRot) + djPos;
-    float3 pWorld = mul(unity_ObjectToWorld, float4(pCentre, 1)).xyz;
+    float3 pCenter = RotY3DJ(pLocal, djRot) + djPos;
+    float3 pWorld = mul(unity_ObjectToWorld, float4(pCenter, 1)).xyz;
     float lodDist = distance(pWorld, _WorldSpaceCameraPos);
     int lod = 0;
 

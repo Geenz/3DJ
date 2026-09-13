@@ -50,6 +50,13 @@ namespace com.happyrobot33.holographicreprojector
         Playback
     }
 
+    public enum PlaybackMode
+    {
+        Both,
+        Standard,
+        Surfel
+    }
+
     public enum TextureAnchor
     {
         TopLeft,
@@ -90,6 +97,7 @@ namespace com.happyrobot33.holographicreprojector
 
         [DeveloperOnly]
         public GameObject mainPlaybackCube;
+        public GameObject surfelPlaybackObject;
 
         [DeveloperOnly]
         public ReflectionProbe reflectionProbe;
@@ -101,6 +109,7 @@ namespace com.happyrobot33.holographicreprojector
         public GameObject localPlaybackParentObject;
         public RenderTexture VideoTexture;
         public AccessControl accessControl;
+        public PlaybackMode playbackMode = PlaybackMode.Both;
 
         [DeveloperOnly]
         public string worldID;
@@ -335,8 +344,32 @@ namespace com.happyrobot33.holographicreprojector
             //self tag
             gameObject.name = MANAGERNAME;
 
-            //make our playback cube always at 0,0,0
-            mainPlaybackCube.transform.position = Vector3.zero;
+            //pin playback objects to 0,0,0
+            switch (playbackMode)
+            {
+                case PlaybackMode.Both:
+                    if (mainPlaybackCube != null)
+                    {
+                        mainPlaybackCube.transform.position = Vector3.zero;
+                    }
+                    if (surfelPlaybackObject != null)
+                    {
+                        surfelPlaybackObject.transform.position = Vector3.zero;
+                    }
+                    break;
+                case PlaybackMode.Standard:
+                    if (mainPlaybackCube != null)
+                    {
+                        mainPlaybackCube.transform.position = Vector3.zero;
+                    }
+                    break;
+                case PlaybackMode.Surfel:
+                    if (surfelPlaybackObject != null)
+                    {
+                        surfelPlaybackObject.transform.position = Vector3.zero;
+                    }
+                    break;
+            }
 
             playerToRecord = Networking.LocalPlayer;
 
@@ -359,10 +392,23 @@ namespace com.happyrobot33.holographicreprojector
                 VRCShader.PropertyToID("_Udon_3DJ_Color"),
                 ColorExtractTexture
             );
-            VRCShader.SetGlobalTexture(
-                VRCShader.PropertyToID("_Udon_3DJ_Color_Upscaled"),
-                UpscaledColorTexture
-            );
+            switch (playbackMode)
+            {
+                case PlaybackMode.Both:
+                    VRCShader.SetGlobalTexture(
+                        VRCShader.PropertyToID("_Udon_3DJ_Color_Upscaled"),
+                        UpscaledColorTexture
+                    );
+                    break;
+                case PlaybackMode.Standard:
+                    VRCShader.SetGlobalTexture(
+                        VRCShader.PropertyToID("_Udon_3DJ_Color_Upscaled"),
+                        UpscaledColorTexture
+                    );
+                    break;
+                case PlaybackMode.Surfel:
+                    break;
+            }
             VRCShader.SetGlobalTexture(
                 VRCShader.PropertyToID("_Udon_3DJ_Depth"),
                 DepthExtractTexture
@@ -507,8 +553,41 @@ namespace com.happyrobot33.holographicreprojector
                 }
             }
 
-            //playback cube visibility
-            mainPlaybackCube.SetActive(globalPlayback);
+            //playback object visibility
+            switch (playbackMode)
+            {
+                case PlaybackMode.Both:
+                    if (mainPlaybackCube != null)
+                    {
+                        mainPlaybackCube.SetActive(globalPlayback);
+                    }
+                    if (surfelPlaybackObject != null)
+                    {
+                        surfelPlaybackObject.SetActive(globalPlayback);
+                    }
+                    break;
+                case PlaybackMode.Standard:
+                    if (mainPlaybackCube != null)
+                    {
+                        mainPlaybackCube.SetActive(globalPlayback);
+                    }
+                    if (surfelPlaybackObject != null)
+                    {
+                        surfelPlaybackObject.SetActive(false);
+                    }
+                    break;
+                case PlaybackMode.Surfel:
+                    if (surfelPlaybackObject != null)
+                    {
+                        surfelPlaybackObject.SetActive(globalPlayback);
+                    }
+                    if (mainPlaybackCube != null)
+                    {
+                        mainPlaybackCube.SetActive(false);
+                    }
+                    break;
+            }
+
             _ConfigureShaderForPlayback();
 
             if (mode == Source.Record)
