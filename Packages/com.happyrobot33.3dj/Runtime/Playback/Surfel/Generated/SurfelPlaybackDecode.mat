@@ -8,20 +8,20 @@ Material:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: SurfelPlaybackDecode
-  m_Shader: {fileID: 4800000, guid: d70d3eaf98c24dd19e26b0021eeadc27, type: 3}
+  m_Shader: {fileID: 4800000, guid: 19d69cfa83924826a0357753527bec84, type: 3}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
   m_ValidKeywords:
   - _DITHER_FRACTAL
-  - _MODE_DITHER
   m_InvalidKeywords:
   - _HULL_ON
+  - _MODE_ACCUMULATE
   - _SHEAR_ON
   - _SOURCE_THREEDJ
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
   m_DoubleSidedGI: 0
-  m_CustomRenderQueue: 2450
+  m_CustomRenderQueue: 3000
   stringTagMap: {}
   disabledShaderPasses: []
   m_LockedProperties: 
@@ -105,8 +105,8 @@ Material:
     - _LockRotation: 0
     - _LodDistance: 8
     - _MaxStretch: 2
-    - _Mode: 2
-    - _Radius: 1
+    - _Mode: 4
+    - _Radius: 3.215598
     - _Scale: 2.85
     - _SeamBlend: 1
     - _Shape: 0
@@ -120,7 +120,7 @@ Material:
     - _StencilComp: 8
     - _StencilRef: 0
     - _StretchSmoothness: 0
-    - _Stride: 1
+    - _Stride: 4.06249
     - _UseFalloffTex: 0
     - _ZWrite: 1
     m_Colors:

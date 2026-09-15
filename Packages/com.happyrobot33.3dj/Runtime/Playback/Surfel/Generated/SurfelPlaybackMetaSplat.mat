@@ -39,7 +39,7 @@ Material:
         m_Offset: {x: 0, y: 0}
     m_Ints: []
     m_Floats:
-    - _GrazingCutoff: 0.2
+    - _GrazingCutoff: 0.3198902
     - _HullFeather: 0.24
     - _HullOn: 1
     - _HullThreshold: 0.1

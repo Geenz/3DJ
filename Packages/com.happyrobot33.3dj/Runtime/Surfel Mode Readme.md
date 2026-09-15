@@ -70,7 +70,7 @@ SurfelRenderComponent's editor scripts should set everything up for you the mome
 
 What it does **not** do on its own is take over as the manager's playback object.  That's the "Assign as Manager playback object" button on the component.  Until you press it the manager doesn't know about the surfel renderer. The shaders still respect global playback on their own, but local playback won't hide it, and the cube stays active.  Pressing it is the "pick one" from above.
 
-If you want the in world tweak panel, that's a separate step: `3DJ > Setup Surfel Control Panel`.  It needs the SurfelRenderComponent to exist first, since it wires itself to that component's materials.
+If you want the in world tweak panel, that's a separate step: the panel is a Canvas you create yourself.  Add SurfelPassViewController to it, assign the fit, splat, and decode materials (the three under Runtime/Playback/Surfel/Generated), and press "Build controls" in its inspector.  It needs the SurfelRenderComponent to have run its setup first so those materials exist.
 
 ## What do all the knobs do?
 
