@@ -107,7 +107,7 @@ Material:
     - _MaxStretch: 2
     - _Mode: 2
     - _Radius: 1
-    - _Scale: 5
+    - _Scale: 2.85
     - _SeamBlend: 1
     - _Shape: 0
     - _ShearOn: 1

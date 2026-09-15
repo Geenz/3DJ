@@ -135,6 +135,11 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 415263923803282550, guid: f81dfdb5b9854e3da6bfad9a3b1e6d09,
         type: 3}
+      propertyPath: mesh
+      value: 
+      objectReference: {fileID: 4300000, guid: f3266d106ed724848bcd2cd64d083caa, type: 2}
+    - target: {fileID: 415263923803282550, guid: f81dfdb5b9854e3da6bfad9a3b1e6d09,
+        type: 3}
       propertyPath: serializationData.Prefab
       value: 
       objectReference: {fileID: 415263923803282550, guid: f81dfdb5b9854e3da6bfad9a3b1e6d09,
