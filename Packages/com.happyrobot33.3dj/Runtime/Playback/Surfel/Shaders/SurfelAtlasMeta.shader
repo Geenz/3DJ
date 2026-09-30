@@ -4,7 +4,7 @@ Shader "SurfelAtlas/Meta" {
         [Tooltip(Reject depth edges entirely.)]
         [Toggle(_SOBEL_ON)] _Sobel ("Sobel", Float) = 1
         [Tooltip(How hard an edge counts)]
-        _SobelThreshold ("Sobel Threshold", Float) = 0.1
+        _SobelThreshold ("Sobel Threshold", Float) = 1.4
 
         [Header(Fit)]
         [Tooltip(Drop texels other faces contradict.)]
@@ -12,15 +12,15 @@ Shader "SurfelAtlas/Meta" {
         [Tooltip(Plane fit neighborhood size)]
         [KeywordEnum(R1, R2, R3, R4)] _FitWindow ("Fit window radius", Float) = 1
         [Tooltip(Contradiction slack, in meters)]
-        _ReprojectTolerance ("Reproject tolerance (m)", Float) = 0.02
+        _ReprojectTolerance ("Reproject tolerance (m)", Float) = 0.08
         [Tooltip(How many faces must disagree)]
-        _ReprojectViews ("Contradicting faces to reject", Int) = 1
+        _ReprojectViews ("Contradicting faces to reject", Int) = 3
 
         [Header(Radius)]
         [Tooltip(Scale surfels by surface detail.)]
         [Toggle(_ADAPTIVE_RADIUS_ON)] _AdaptiveRadius ("Adaptive radius", Float) = 0
         [Tooltip(Multiplier where detail is high)]
-        _RadiusMin ("Radius min", Float) = 1
+        _RadiusMin ("Radius min", Float) = 0.35
         [Tooltip(Multiplier where surface is flat)]
         _RadiusMax ("Radius max", Float) = 1
         [Tooltip(Residual that means detailed, meters)]

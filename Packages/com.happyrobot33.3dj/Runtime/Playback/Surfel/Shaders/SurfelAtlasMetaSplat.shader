@@ -6,17 +6,17 @@ Shader "SurfelAtlas/MetaSplat" {
         [Tooltip(Fade in where faces overlap)]
         _SeamBlend ("Seam blend", Float) = 1.4
         [Tooltip(Drop surfels seen edge on)]
-        _GrazingCutoff ("Grazing cutoff", Range(0, 1)) = 0.15
+        _GrazingCutoff ("Grazing cutoff", Range(0, 1)) = 0.27
         [Tooltip(Cap on tilted disc elongation)]
-        _MaxStretch ("Max stretch", Range(1, 5)) = 5
+        _MaxStretch ("Max stretch", Range(1, 5)) = 2.15
 
         [Header(Hull)]
         [Tooltip(Reject surfels outside the silhouette.)]
         [Toggle(_HULL_ON)] _HullOn ("Hull", Float) = 1
         [Tooltip(How much hull counts as inside)]
-        _HullThreshold ("Hull threshold", Float) = 0.5
+        _HullThreshold ("Hull threshold", Float) = 0.26
         [Tooltip(Soften the hull edge)]
-        _HullFeather ("Hull feather", Float) = 0
+        _HullFeather ("Hull feather", Float) = 0.28
 
         [HideInInspector] _Meta ("", 2D) = "black" {}
         [HideInInspector] _Strip3DJ ("", 2D) = "black" {}

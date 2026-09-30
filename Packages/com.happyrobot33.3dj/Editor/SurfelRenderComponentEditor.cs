@@ -33,6 +33,7 @@ namespace com.happyrobot33.holographicreprojector.Editor {
         public const string ColorCrtPath = GenDir + "/SurfelPlaybackColor.asset";
 
         public const string DecodeShaderName = "SurfelAtlas/Decode";
+        public const string AccumulateShaderName = "SurfelAtlas/DecodeAccumulate";
         public const string MetaShaderName = "SurfelAtlas/Meta";
         public const string MetaSplatShaderName = "SurfelAtlas/MetaSplat";
         public const string StripShaderName = "SurfelAtlas/ThreeDJStrip";
@@ -73,12 +74,13 @@ namespace com.happyrobot33.holographicreprojector.Editor {
             }
 
             Shader decodeShader = Shader.Find(DecodeShaderName);
+            Shader accumulateShader = Shader.Find(AccumulateShaderName);
             Shader metaShader = Shader.Find(MetaShaderName);
             Shader splatShader = Shader.Find(MetaSplatShaderName);
             Shader stripShader = Shader.Find(StripShaderName);
             Shader snapshotShader = Shader.Find(SnapshotShaderName);
 
-            if (decodeShader == null || metaShader == null || splatShader == null || stripShader == null || snapshotShader == null) {
+            if (decodeShader == null || accumulateShader == null || metaShader == null || splatShader == null || stripShader == null || snapshotShader == null) {
                 return;
             }
 
@@ -86,7 +88,14 @@ namespace com.happyrobot33.holographicreprojector.Editor {
             bool metaIsNew = AssetDatabase.LoadAssetAtPath<Material>(MetaMatPath) == null;
             bool splatIsNew = AssetDatabase.LoadAssetAtPath<Material>(MetaSplatMatPath) == null;
 
-            Material decodeMat = EnsureMaterial(DecodeMatPath, decodeShader);
+            Material existingDecodeMat = AssetDatabase.LoadAssetAtPath<Material>(DecodeMatPath);
+            Shader decodeMaterialShader = decodeShader;
+
+            if (existingDecodeMat != null && existingDecodeMat.shader == accumulateShader) {
+                decodeMaterialShader = accumulateShader;
+            }
+
+            Material decodeMat = EnsureMaterial(DecodeMatPath, decodeMaterialShader);
             Material metaMat = EnsureMaterial(MetaMatPath, metaShader);
             Material splatMat = EnsureMaterial(MetaSplatMatPath, splatShader);
             Material stripMat = EnsureMaterial(StripMatPath, stripShader);
@@ -108,7 +117,7 @@ namespace com.happyrobot33.holographicreprojector.Editor {
                 newSplat = splatMat;
             }
 
-            ConfigureDefaults(newDecode, newMeta, newSplat);
+            ConfigureDefaults(newDecode, newMeta, newSplat, accumulateShader);
 
             Vector2Int size = manager.DepthTextureSize;
             Vector2Int colorSize = manager.ColorTextureSize;
@@ -252,26 +261,14 @@ namespace com.happyrobot33.holographicreprojector.Editor {
         }
 
         // Applied only when a material was just created; an existing material's tuned keywords and values stand.
-        public static void ConfigureDefaults(Material decodeMat, Material metaMat, Material splatMat) {
+        public static void ConfigureDefaults(Material decodeMat, Material metaMat, Material splatMat, Shader accumulateShader) {
             if (decodeMat != null) {
                 decodeMat.SetFloat("_UseFalloffTex", 0f);
                 decodeMat.DisableKeyword("_FALLOFFTEX_ON");
 
-                decodeMat.SetFloat("_Mode", 0f);
-                decodeMat.EnableKeyword("_MODE_TWOPASS");
-                decodeMat.DisableKeyword("_MODE_ZWRITE");
-                decodeMat.DisableKeyword("_MODE_DITHER");
-                decodeMat.DisableKeyword("_MODE_CUTOUT");
-
-                float zWrite, srcBlend, dstBlend, stencilRef, stencilComp;
-                int queue;
-                SurfelDecodeGUI.BlendState(0, out zWrite, out srcBlend, out dstBlend, out queue, out stencilRef, out stencilComp);
-                decodeMat.SetFloat("_ZWrite", zWrite);
-                decodeMat.SetFloat("_SrcBlend", srcBlend);
-                decodeMat.SetFloat("_DstBlend", dstBlend);
-                decodeMat.SetFloat("_StencilRef", stencilRef);
-                decodeMat.SetFloat("_StencilComp", stencilComp);
-                decodeMat.renderQueue = queue;
+                decodeMat.shader = accumulateShader;
+                decodeMat.SetFloat("_Mode", 4f);
+                decodeMat.renderQueue = (int)UnityEngine.Rendering.RenderQueue.Transparent;
 
                 decodeMat.SetFloat("_Dither", 1f);
                 decodeMat.EnableKeyword("_DITHER_BLUENOISE");
@@ -296,11 +293,11 @@ namespace com.happyrobot33.holographicreprojector.Editor {
                 splatMat.EnableKeyword("_SHEAR_ON");
                 splatMat.SetFloat("_HullOn", 1f);
                 splatMat.EnableKeyword("_HULL_ON");
-                splatMat.SetFloat("_HullThreshold", 0.5f);
-                splatMat.SetFloat("_HullFeather", 0f);
+                splatMat.SetFloat("_HullThreshold", 0.26f);
+                splatMat.SetFloat("_HullFeather", 0.28f);
                 splatMat.SetFloat("_SeamBlend", 1.4f);
-                splatMat.SetFloat("_GrazingCutoff", 0.15f);
-                splatMat.SetFloat("_MaxStretch", 5f);
+                splatMat.SetFloat("_GrazingCutoff", 0.27f);
+                splatMat.SetFloat("_MaxStretch", 2.15f);
             }
         }
 

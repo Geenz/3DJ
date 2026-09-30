@@ -2,13 +2,13 @@ Shader "SurfelAtlas/DecodeAccumulate" {
     Properties {
         [Header(Splat)]
         [Tooltip(Global surfel size multiplier)]
-        _Radius ("Splat radius", Float) = 1.5
+        _Radius ("Splat radius", Float) = 1.2
         [Tooltip(Texels per surfel, matches the bake)]
-        _Stride ("Stride", Float) = 1
+        _Stride ("Stride", Float) = 1.45
 
         [Header(Depth Prepass)]
         [Tooltip(How far the prepass pushes back)]
-        _DepthOffset ("Depth offset", Float) = 1.0
+        _DepthOffset ("Depth offset", Float) = 4
 
         [Header(Playback)]
         [Tooltip(Draw even when playback is off)]
@@ -20,34 +20,34 @@ Shader "SurfelAtlas/DecodeAccumulate" {
 
         [Header(Blending)]
         [Tooltip(Two pass, ZWrite, dither, cutout, or accumulate.)]
-        [KeywordEnum(TwoPass, ZWrite, Dither, Cutout, Accumulate)] _Mode ("Blend mode", Float) = 0
+        [KeywordEnum(TwoPass, ZWrite, Dither, Cutout, Accumulate)] _Mode ("Blend mode", Float) = 4
         [Tooltip(Alpha test threshold)]
         _Cutoff ("Cutout", Range(0,1)) = 0.5
 
         [Header(Falloff)]
         [Tooltip(Overall alpha boost)]
-        _FalloffMult ("Falloff Multiplier", Float) = 1
+        _FalloffMult ("Falloff Multiplier", Float) = 8
         [Tooltip(Texture instead of the curve)]
         [Toggle(_FALLOFFTEX_ON)] _UseFalloffTex ("Use falloff texture", Float) = 0
         [Tooltip(How fast a disc fades out.)]
-        _Falloff ("Falloff", Float) = 2.5
+        _Falloff ("Falloff", Float) = 0.75
         [Tooltip(Disc or the whole quad)]
-        [Enum(Disc, 0, Rect, 1)] _Shape ("Shape", Float) = 0
+        [Enum(Disc, 0, Rect, 1)] _Shape ("Shape", Float) = 1
         _FalloffTex ("Falloff texture", 2D) = "white" {}
 
         [Header(Fade)]
         [Tooltip(How far the camera fade reaches)]
-        _FadeDistance ("Fade distance", Float) = 0.3
+        _FadeDistance ("Fade distance", Float) = 0.1
         [Tooltip(How hard it fades up close)]
         _FadeMultiplier ("Fade multiplier", Float) = 1
 
         [Header(LOD)]
         [Tooltip(Where the first halving starts)]
-        _LodDistance ("LOD distance", Float) = 8
+        _LodDistance ("LOD distance", Float) = 20
 
         [Header(Accumulation)]
         [Tooltip(Weight range for accumulate mode)]
-        _AccScale ("Accumulation scale", Range(0.01, 1)) = 0.125
+        _AccScale ("Accumulation scale", Range(0.01, 1)) = 0.12
 
         [Header(Dither)]
         [Tooltip(Bayer, bayer plus blue noise, or fractal.)]
@@ -60,13 +60,13 @@ Shader "SurfelAtlas/DecodeAccumulate" {
         [HideInInspector] _DitherTex ("Dither 3D Texture", 3D) = "" {}
         [HideInInspector] _DitherRampTex ("Dither Ramp Texture", 2D) = "white" {}
         [Tooltip(Fractal dot size on screen.)]
-        _Scale ("Dot Scale", Range(2,10)) = 5.0
+        _Scale ("Dot Scale", Range(2,10)) = 2
         [Tooltip(Dots change count or size.)]
-        _SizeVariability ("Dot Size Variability", Range(0,1)) = 0
+        _SizeVariability ("Dot Size Variability", Range(0,1)) = 0.03
         [Tooltip(How crisp the dots are.)]
         _Contrast ("Dot Contrast", Range(0,2)) = 1
         [Tooltip(Smoothing on stretched dots.)]
-        _StretchSmoothness ("Stretch Smoothness", Range(0,2)) = 1
+        _StretchSmoothness ("Stretch Smoothness", Range(0,2)) = 0
         [Tooltip(Brighten before dithering.)]
         _InputExposure ("Exposure", Range(0,5)) = 1
         [Tooltip(Shift before dithering.)]
