@@ -31,6 +31,8 @@ Shader "SurfelAtlas/Decode" {
         [Toggle(_FALLOFFTEX_ON)] _UseFalloffTex ("Use falloff texture", Float) = 0
         [Tooltip(How fast a disc fades out.)]
         _Falloff ("Falloff", Float) = 0.75
+        [Tooltip(Falloff removed per meter of distance)]
+        _FalloffDistanceBias ("Falloff distance bias", Float) = 0
         [Tooltip(Disc or the whole quad)]
         [Enum(Disc, 0, Rect, 1)] _Shape ("Shape", Float) = 1
         _FalloffTex ("Falloff texture", 2D) = "white" {}
@@ -146,6 +148,8 @@ Shader "SurfelAtlas/Decode" {
             half4 fragColor(v2f i) : SV_Target {
                 #if defined(_MODE_CUTOUT)
                 half fall = 2.5;
+                #elif defined(_MODE_TWOPASS)
+                half fall = i.falloff;
                 #else
                 half fall = (half)_Falloff;
                 #endif

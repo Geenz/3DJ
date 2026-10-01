@@ -140,6 +140,7 @@ namespace com.happyrobot33.holographicreprojector.Editor {
             Bind("depthOffset", SliderRow(parentTransform, "depthOffset", "Depth offset", 0f, 4f, false));
             Bind("cutoff", SliderRow(parentTransform, "cutoff", "Cutout", 0f, 1f, false));
             Bind("falloff", SliderRow(parentTransform, "falloff", "Falloff", 0.5f, 8f, false));
+            Bind("falloffDistanceBias", SliderRow(parentTransform, "falloffDistanceBias", "Falloff distance bias", 0f, 0.5f, false));
             Bind("falloffMult", SliderRow(parentTransform, "falloffMult", "Falloff Multiplier", 0f, 8f, false));
             Bind("fadeDistance", SliderRow(parentTransform, "fadeDistance", "Fade distance", 0f, 5f, false));
             Bind("fadeMultiplier", SliderRow(parentTransform, "fadeMultiplier", "Fade multiplier", 0f, 8f, false));

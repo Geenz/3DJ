@@ -163,6 +163,8 @@ How fast a disc fades out.
   * Disc or the whole quad
 * Falloff Multiplier
   * Overall alpha boost
+* Falloff distance bias
+  * Falloff removed per meter of distance, harder discs far away
 * Use falloff texture
   * Texture instead of the curve
 

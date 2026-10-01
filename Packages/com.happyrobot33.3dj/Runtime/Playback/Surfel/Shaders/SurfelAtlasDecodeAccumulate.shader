@@ -31,6 +31,8 @@ Shader "SurfelAtlas/DecodeAccumulate" {
         [Toggle(_FALLOFFTEX_ON)] _UseFalloffTex ("Use falloff texture", Float) = 0
         [Tooltip(How fast a disc fades out.)]
         _Falloff ("Falloff", Float) = 0.75
+        [Tooltip(Falloff removed per meter of distance)]
+        _FalloffDistanceBias ("Falloff distance bias", Float) = 0
         [Tooltip(Disc or the whole quad)]
         [Enum(Disc, 0, Rect, 1)] _Shape ("Shape", Float) = 1
         _FalloffTex ("Falloff texture", 2D) = "white" {}
@@ -134,7 +136,7 @@ Shader "SurfelAtlas/DecodeAccumulate" {
             #pragma shader_feature_local _FALLOFFTEX_ON
 
             float4 fragClear(v2f i) : SV_Target {
-                half cov = Coverage(i.corner, i.uv1, (half)_Falloff);
+                half cov = Coverage(i.corner, i.uv1, i.falloff);
                 clip(cov - 1e-4);
                 clip(cov * i.hull - 1e-4);
                 return float4(0, 0, 0, 0);
@@ -160,7 +162,7 @@ Shader "SurfelAtlas/DecodeAccumulate" {
             #pragma shader_feature_local _FALLOFFTEX_ON
 
             float4 fragAcc(v2f i) : SV_Target {
-                half cov = Coverage(i.corner, i.uv1, (half)_Falloff);
+                half cov = Coverage(i.corner, i.uv1, i.falloff);
                 clip(cov - 1e-4);
                 cov *= i.hull;
                 half w = cov * i.weight;
@@ -190,7 +192,7 @@ Shader "SurfelAtlas/DecodeAccumulate" {
 
             float4 fragResolve(v2f i) : SV_Target {
                 UNITY_SETUP_STEREO_EYE_INDEX_POST_VERTEX(i);
-                half cov = Coverage(i.corner, i.uv1, (half)_Falloff);
+                half cov = Coverage(i.corner, i.uv1, i.falloff);
                 clip(cov - 1e-4);
                 clip(cov * i.hull - 1e-4);
                 float2 guv = i.grabPos.xy / i.grabPos.w;

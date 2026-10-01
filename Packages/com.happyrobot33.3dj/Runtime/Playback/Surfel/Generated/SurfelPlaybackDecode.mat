@@ -21,7 +21,7 @@ Material:
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
   m_DoubleSidedGI: 0
-  m_CustomRenderQueue: 3000
+  m_CustomRenderQueue: -1
   stringTagMap: {}
   disabledShaderPasses: []
   m_LockedProperties: 
@@ -86,13 +86,14 @@ Material:
     - _Contrast: 1
     - _Cutoff: 0.5
     - _DepthDither: 1
-    - _DepthOffset: 4
+    - _DepthOffset: 1.25
     - _Dither: 2
-    - _DstBlend: 0
+    - _DstBlend: 10
     - _FadeDistance: 0.1
     - _FadeMultiplier: 1
-    - _Falloff: 1.3
-    - _FalloffMult: 2
+    - _Falloff: 8
+    - _FalloffDistanceBias: 5
+    - _FalloffMult: 1
     - _GrazingCutoff: 0.3
     - _HullClip: 0
     - _HullFeather: 0
@@ -103,26 +104,26 @@ Material:
     - _InputOffset: 0
     - _LockPosition: 0
     - _LockRotation: 0
-    - _LodDistance: 8
+    - _LodDistance: 20
     - _MaxStretch: 2
     - _Mode: 4
-    - _Radius: 3.215598
-    - _Scale: 2.85
+    - _Radius: 2
+    - _Scale: 2
     - _SeamBlend: 1
-    - _Shape: 0
+    - _Shape: 1
     - _ShearOn: 1
     - _SizeVariability: 0
     - _SizeX: 4
     - _SizeY: 3
     - _SizeZ: 4
     - _Source: 2
-    - _SrcBlend: 1
-    - _StencilComp: 8
-    - _StencilRef: 0
+    - _SrcBlend: 5
+    - _StencilComp: 3
+    - _StencilRef: 1
     - _StretchSmoothness: 0
-    - _Stride: 4.06249
+    - _Stride: 2
     - _UseFalloffTex: 0
-    - _ZWrite: 1
+    - _ZWrite: 0
     m_Colors:
     - _Atlas: {r: 512, g: 256, b: 0.001953125, a: 0.00390625}
     - _Capsule: {r: 0, g: 2, b: 0, a: 2}

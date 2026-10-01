@@ -16,6 +16,7 @@ float _BlueNoiseMix;
 float _BlueNoiseJitter;
 #endif
 float _Falloff;
+float _FalloffDistanceBias;
 float _FalloffMult;
 float _FadeDistance;
 float _FadeMultiplier;
@@ -61,6 +62,7 @@ struct v2f {
     half2  uv1    : TEXCOORD5;
     nointerpolation half hull : TEXCOORD6;
     float2 ditherUv : TEXCOORD7;
+    nointerpolation half falloff : TEXCOORD8;
     UNITY_VERTEX_OUTPUT_STEREO
 };
 
@@ -72,6 +74,7 @@ struct Surfel {
     half3  col;
     half   weight;
     half   hull;
+    half   falloff;
     float2 ditherUv;
 };
 
@@ -410,6 +413,7 @@ Surfel SurfelEmpty() {
     s.col = 0;
     s.weight = 0;
     s.hull = 0;
+    s.falloff = 0;
     s.ditherUv = 0;
     return s;
 }
@@ -520,6 +524,7 @@ Surfel Reconstruct3DJ(appdata v, float push) {
     s.uv1 = (half2)v.uv1;
     s.col = colTex.rgb;
     s.weight = splat.a * coverage * fade;
+    s.falloff = (half)max(_Falloff - lodDist * _FalloffDistanceBias, 0);
     s.hull = (half)splat.b;
     s.ditherUv = ditherUv;
     return s;
@@ -534,6 +539,7 @@ void ApplyCollapse(inout v2f o) {
     o.grabPos = 0;
     o.uv1 = 0;
     o.hull = 0;
+    o.falloff = 0;
     o.ditherUv = 0;
 }
 
@@ -557,12 +563,13 @@ v2f VertCommon(appdata v, float push) {
     o.weight = s.weight;
     o.uv1 = s.uv1;
     o.hull = s.hull;
+    o.falloff = s.falloff;
     o.ditherUv = s.ditherUv;
     return o;
 }
 
 half4 fragDepth(v2f i) : SV_Target {
-    half cov = Coverage(i.corner, i.uv1, (half)_Falloff);
+    half cov = Coverage(i.corner, i.uv1, i.falloff);
     half alpha = (half)saturate(cov * i.weight * _FalloffMult);
     clip(cov * i.hull - 1e-4);
 

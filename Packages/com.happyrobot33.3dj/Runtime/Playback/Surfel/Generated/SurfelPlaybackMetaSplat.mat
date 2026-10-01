@@ -39,11 +39,11 @@ Material:
         m_Offset: {x: 0, y: 0}
     m_Ints: []
     m_Floats:
-    - _GrazingCutoff: 0.3198902
-    - _HullFeather: 0.24
+    - _GrazingCutoff: 0.3
+    - _HullFeather: 0.3
     - _HullOn: 1
     - _HullThreshold: 0.1
-    - _MaxStretch: 2.5
+    - _MaxStretch: 5
     - _SeamBlend: 2
     - _ShearOn: 1
     m_Colors: []

@@ -36,6 +36,7 @@ namespace com.happyrobot33.holographicreprojector {
         public Slider depthOffset;
         public Slider cutoff;
         public Slider falloff;
+        public Slider falloffDistanceBias;
         public Slider falloffMult;
         public Slider fadeDistance;
         public Slider fadeMultiplier;
@@ -72,6 +73,7 @@ namespace com.happyrobot33.holographicreprojector {
         [UdonSynced] float syncedDepthOffset;
         [UdonSynced] float syncedCutoff;
         [UdonSynced] float syncedFalloff;
+        [UdonSynced] float syncedFalloffDistanceBias;
         [UdonSynced] float syncedFalloffMult;
         [UdonSynced] float syncedFadeDistance;
         [UdonSynced] float syncedFadeMultiplier;
@@ -101,7 +103,7 @@ namespace com.happyrobot33.holographicreprojector {
             drops = new TMP_Dropdown[1];
             drops[0] = blendMode;
 
-            sliders = new Slider[28];
+            sliders = new Slider[29];
             sliders[0] = sobelThreshold;
             sliders[1] = reprojectTolerance;
             sliders[2] = reprojectViews;
@@ -118,18 +120,19 @@ namespace com.happyrobot33.holographicreprojector {
             sliders[13] = depthOffset;
             sliders[14] = cutoff;
             sliders[15] = falloff;
-            sliders[16] = falloffMult;
-            sliders[17] = fadeDistance;
-            sliders[18] = fadeMultiplier;
-            sliders[19] = lodDistance;
-            sliders[20] = accScale;
-            sliders[21] = blueNoiseMix;
-            sliders[22] = dotScale;
-            sliders[23] = dotSizeVariability;
-            sliders[24] = dotContrast;
-            sliders[25] = stretchSmoothness;
-            sliders[26] = exposure;
-            sliders[27] = offset;
+            sliders[16] = falloffDistanceBias;
+            sliders[17] = falloffMult;
+            sliders[18] = fadeDistance;
+            sliders[19] = fadeMultiplier;
+            sliders[20] = lodDistance;
+            sliders[21] = accScale;
+            sliders[22] = blueNoiseMix;
+            sliders[23] = dotScale;
+            sliders[24] = dotSizeVariability;
+            sliders[25] = dotContrast;
+            sliders[26] = stretchSmoothness;
+            sliders[27] = exposure;
+            sliders[28] = offset;
         }
 
         void Start() {
@@ -200,42 +203,45 @@ namespace com.happyrobot33.holographicreprojector {
             float falloffInitial = decodeMaterial.GetFloat("_Falloff");
             PushSlider(15, falloffInitial);
             SetSyncedSlider(15, falloffInitial);
+            float falloffDistanceBiasInitial = decodeMaterial.GetFloat("_FalloffDistanceBias");
+            PushSlider(16, falloffDistanceBiasInitial);
+            SetSyncedSlider(16, falloffDistanceBiasInitial);
             float falloffMultInitial = decodeMaterial.GetFloat("_FalloffMult");
-            PushSlider(16, falloffMultInitial);
-            SetSyncedSlider(16, falloffMultInitial);
+            PushSlider(17, falloffMultInitial);
+            SetSyncedSlider(17, falloffMultInitial);
             float fadeDistanceInitial = decodeMaterial.GetFloat("_FadeDistance");
-            PushSlider(17, fadeDistanceInitial);
-            SetSyncedSlider(17, fadeDistanceInitial);
+            PushSlider(18, fadeDistanceInitial);
+            SetSyncedSlider(18, fadeDistanceInitial);
             float fadeMultiplierInitial = decodeMaterial.GetFloat("_FadeMultiplier");
-            PushSlider(18, fadeMultiplierInitial);
-            SetSyncedSlider(18, fadeMultiplierInitial);
+            PushSlider(19, fadeMultiplierInitial);
+            SetSyncedSlider(19, fadeMultiplierInitial);
             float lodDistanceInitial = decodeMaterial.GetFloat("_LodDistance");
-            PushSlider(19, lodDistanceInitial);
-            SetSyncedSlider(19, lodDistanceInitial);
+            PushSlider(20, lodDistanceInitial);
+            SetSyncedSlider(20, lodDistanceInitial);
             float accScaleInitial = decodeMaterial.GetFloat("_AccScale");
-            PushSlider(20, accScaleInitial);
-            SetSyncedSlider(20, accScaleInitial);
+            PushSlider(21, accScaleInitial);
+            SetSyncedSlider(21, accScaleInitial);
             float blueNoiseMixInitial = decodeMaterial.GetFloat("_BlueNoiseMix");
-            PushSlider(21, blueNoiseMixInitial);
-            SetSyncedSlider(21, blueNoiseMixInitial);
+            PushSlider(22, blueNoiseMixInitial);
+            SetSyncedSlider(22, blueNoiseMixInitial);
             float dotScaleInitial = decodeMaterial.GetFloat("_Scale");
-            PushSlider(22, dotScaleInitial);
-            SetSyncedSlider(22, dotScaleInitial);
+            PushSlider(23, dotScaleInitial);
+            SetSyncedSlider(23, dotScaleInitial);
             float dotSizeVariabilityInitial = decodeMaterial.GetFloat("_SizeVariability");
-            PushSlider(23, dotSizeVariabilityInitial);
-            SetSyncedSlider(23, dotSizeVariabilityInitial);
+            PushSlider(24, dotSizeVariabilityInitial);
+            SetSyncedSlider(24, dotSizeVariabilityInitial);
             float dotContrastInitial = decodeMaterial.GetFloat("_Contrast");
-            PushSlider(24, dotContrastInitial);
-            SetSyncedSlider(24, dotContrastInitial);
+            PushSlider(25, dotContrastInitial);
+            SetSyncedSlider(25, dotContrastInitial);
             float stretchSmoothnessInitial = decodeMaterial.GetFloat("_StretchSmoothness");
-            PushSlider(25, stretchSmoothnessInitial);
-            SetSyncedSlider(25, stretchSmoothnessInitial);
+            PushSlider(26, stretchSmoothnessInitial);
+            SetSyncedSlider(26, stretchSmoothnessInitial);
             float exposureInitial = decodeMaterial.GetFloat("_InputExposure");
-            PushSlider(26, exposureInitial);
-            SetSyncedSlider(26, exposureInitial);
+            PushSlider(27, exposureInitial);
+            SetSyncedSlider(27, exposureInitial);
             float offsetInitial = decodeMaterial.GetFloat("_InputOffset");
-            PushSlider(27, offsetInitial);
-            SetSyncedSlider(27, offsetInitial);
+            PushSlider(28, offsetInitial);
+            SetSyncedSlider(28, offsetInitial);
 
             if (Networking.IsOwner(gameObject)) {
                 RequestSerialization();
@@ -447,46 +453,50 @@ namespace com.happyrobot33.holographicreprojector {
             }
 
             if (index == 16) {
-                return syncedFalloffMult;
+                return syncedFalloffDistanceBias;
             }
 
             if (index == 17) {
-                return syncedFadeDistance;
+                return syncedFalloffMult;
             }
 
             if (index == 18) {
-                return syncedFadeMultiplier;
+                return syncedFadeDistance;
             }
 
             if (index == 19) {
-                return syncedLodDistance;
+                return syncedFadeMultiplier;
             }
 
             if (index == 20) {
-                return syncedAccScale;
+                return syncedLodDistance;
             }
 
             if (index == 21) {
-                return syncedBlueNoiseMix;
+                return syncedAccScale;
             }
 
             if (index == 22) {
-                return syncedDotScale;
+                return syncedBlueNoiseMix;
             }
 
             if (index == 23) {
-                return syncedDotSizeVariability;
+                return syncedDotScale;
             }
 
             if (index == 24) {
-                return syncedDotContrast;
+                return syncedDotSizeVariability;
             }
 
             if (index == 25) {
-                return syncedStretchSmoothness;
+                return syncedDotContrast;
             }
 
             if (index == 26) {
+                return syncedStretchSmoothness;
+            }
+
+            if (index == 27) {
                 return syncedExposure;
             }
 
@@ -527,26 +537,28 @@ namespace com.happyrobot33.holographicreprojector {
             } else if (index == 15) {
                 syncedFalloff = value;
             } else if (index == 16) {
-                syncedFalloffMult = value;
+                syncedFalloffDistanceBias = value;
             } else if (index == 17) {
-                syncedFadeDistance = value;
+                syncedFalloffMult = value;
             } else if (index == 18) {
-                syncedFadeMultiplier = value;
+                syncedFadeDistance = value;
             } else if (index == 19) {
-                syncedLodDistance = value;
+                syncedFadeMultiplier = value;
             } else if (index == 20) {
-                syncedAccScale = value;
+                syncedLodDistance = value;
             } else if (index == 21) {
-                syncedBlueNoiseMix = value;
+                syncedAccScale = value;
             } else if (index == 22) {
-                syncedDotScale = value;
+                syncedBlueNoiseMix = value;
             } else if (index == 23) {
-                syncedDotSizeVariability = value;
+                syncedDotScale = value;
             } else if (index == 24) {
-                syncedDotContrast = value;
+                syncedDotSizeVariability = value;
             } else if (index == 25) {
-                syncedStretchSmoothness = value;
+                syncedDotContrast = value;
             } else if (index == 26) {
+                syncedStretchSmoothness = value;
+            } else if (index == 27) {
                 syncedExposure = value;
             } else {
                 syncedOffset = value;
@@ -686,26 +698,28 @@ namespace com.happyrobot33.holographicreprojector {
             } else if (index == 15) {
                 decodeMaterial.SetFloat("_Falloff", value);
             } else if (index == 16) {
-                decodeMaterial.SetFloat("_FalloffMult", value);
+                decodeMaterial.SetFloat("_FalloffDistanceBias", value);
             } else if (index == 17) {
-                decodeMaterial.SetFloat("_FadeDistance", value);
+                decodeMaterial.SetFloat("_FalloffMult", value);
             } else if (index == 18) {
-                decodeMaterial.SetFloat("_FadeMultiplier", value);
+                decodeMaterial.SetFloat("_FadeDistance", value);
             } else if (index == 19) {
-                decodeMaterial.SetFloat("_LodDistance", value);
+                decodeMaterial.SetFloat("_FadeMultiplier", value);
             } else if (index == 20) {
-                decodeMaterial.SetFloat("_AccScale", value);
+                decodeMaterial.SetFloat("_LodDistance", value);
             } else if (index == 21) {
-                decodeMaterial.SetFloat("_BlueNoiseMix", value);
+                decodeMaterial.SetFloat("_AccScale", value);
             } else if (index == 22) {
-                decodeMaterial.SetFloat("_Scale", value);
+                decodeMaterial.SetFloat("_BlueNoiseMix", value);
             } else if (index == 23) {
-                decodeMaterial.SetFloat("_SizeVariability", value);
+                decodeMaterial.SetFloat("_Scale", value);
             } else if (index == 24) {
-                decodeMaterial.SetFloat("_Contrast", value);
+                decodeMaterial.SetFloat("_SizeVariability", value);
             } else if (index == 25) {
-                decodeMaterial.SetFloat("_StretchSmoothness", value);
+                decodeMaterial.SetFloat("_Contrast", value);
             } else if (index == 26) {
+                decodeMaterial.SetFloat("_StretchSmoothness", value);
+            } else if (index == 27) {
                 decodeMaterial.SetFloat("_InputExposure", value);
             } else {
                 decodeMaterial.SetFloat("_InputOffset", value);
@@ -791,6 +805,7 @@ namespace com.happyrobot33.holographicreprojector {
             ShowRow(blueNoiseMix, ditherOn && blueNoise);
             ShowRow(blueNoiseJitter, ditherOn && blueNoise);
             ShowRow(falloff, !falloffTex && mode != 3);
+            ShowRow(falloffDistanceBias, !falloffTex && twoPassOrAcc);
             ShowRow(rectangular, !falloffTex);
             ShowRow(dotScale, ditherOn && fractal);
             ShowRow(dotSizeVariability, ditherOn && fractal);

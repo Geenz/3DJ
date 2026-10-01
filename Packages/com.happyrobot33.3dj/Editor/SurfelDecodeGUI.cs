@@ -133,6 +133,10 @@ namespace com.happyrobot33.holographicreprojector.Editor {
                 return !useFalloffTex && mode != 3;
             }
 
+            if (name == "_FalloffDistanceBias") {
+                return !useFalloffTex && (mode == 0 || mode == 4);
+            }
+
             if (name == "_Shape") {
                 return !useFalloffTex;
             }
