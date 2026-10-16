@@ -136,7 +136,7 @@ namespace com.happyrobot33.holographicreprojector.Editor {
             MeshRenderer meshRenderer = component.GetComponent<MeshRenderer>();
             Undo.RecordObject(meshRenderer, "Configure Surfel Playback");
             meshRenderer.sharedMaterial = decodeMat;
-            meshRenderer.shadowCastingMode = ShadowCastingMode.Off;
+            meshRenderer.shadowCastingMode = ShadowCastingMode.On;
             meshRenderer.receiveShadows = false;
             meshRenderer.lightProbeUsage = LightProbeUsage.Off;
             meshRenderer.reflectionProbeUsage = ReflectionProbeUsage.Off;

@@ -121,7 +121,7 @@ Material:
     - _StencilComp: 3
     - _StencilRef: 1
     - _StretchSmoothness: 0
-    - _Stride: 2
+    - _Stride: 1
     - _UseFalloffTex: 0
     - _ZWrite: 0
     m_Colors:

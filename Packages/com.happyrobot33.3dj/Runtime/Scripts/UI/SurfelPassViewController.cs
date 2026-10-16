@@ -13,7 +13,7 @@ namespace com.happyrobot33.holographicreprojector {
 
         [HideInInspector] public Shader accumulateShader;
 
-        Shader decodeShader;
+        [HideInInspector] public Shader decodeShader;
 
         public Toggle blueNoiseJitter;
         public Toggle rectangular;
@@ -139,8 +139,6 @@ namespace com.happyrobot33.holographicreprojector {
             if (fitMaterial == null || splatMaterial == null || decodeMaterial == null) {
                 return;
             }
-
-            decodeShader = decodeMaterial.shader;
 
             BuildArrays();
 

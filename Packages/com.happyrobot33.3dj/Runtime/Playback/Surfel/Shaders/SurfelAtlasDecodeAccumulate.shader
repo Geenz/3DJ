@@ -199,7 +199,7 @@ Shader "SurfelAtlas/DecodeAccumulate" {
                 float4 acc = UNITY_SAMPLE_SCREENSPACE_TEXTURE(_SurfelAcc, guv);
                 float4 bg = UNITY_SAMPLE_SCREENSPACE_TEXTURE(_SurfelBg, guv);
                 float wsum = acc.a / _AccScale;
-                float3 col = acc.rgb / max(acc.a, 1e-5);
+                float3 col = saturate(acc.rgb / max(acc.a, 1e-5));
                 return float4(lerp(bg.rgb, col, saturate(wsum)), 1);
             }
 

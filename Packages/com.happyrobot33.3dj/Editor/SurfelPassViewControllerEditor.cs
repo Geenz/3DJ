@@ -115,6 +115,7 @@ namespace com.happyrobot33.holographicreprojector.Editor {
             Transform parentTransform = component.transform;
 
             Bind("accumulateShader", Shader.Find("SurfelAtlas/DecodeAccumulate"));
+            Bind("decodeShader", Shader.Find("SurfelAtlas/Decode"));
 
             Header(parentTransform, "Fit");
             Bind("sobelThreshold", SliderRow(parentTransform, "sobelThreshold", "Sobel Threshold", 0f, 8f, false));
