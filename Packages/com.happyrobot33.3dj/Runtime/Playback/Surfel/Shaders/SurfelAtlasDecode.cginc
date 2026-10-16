@@ -53,16 +53,17 @@ struct appdata {
 };
 
 struct v2f {
+    V2F_SHADOW_CASTER_NOPOS
     float4 pos    : SV_POSITION;
-    half2  corner : TEXCOORD0;
-    half3  col    : TEXCOORD1;
-    nointerpolation half weight : TEXCOORD2;
-    float4 screenPos : TEXCOORD3;
-    float4 grabPos : TEXCOORD4;
-    half2  uv1    : TEXCOORD5;
-    nointerpolation half hull : TEXCOORD6;
-    float2 ditherUv : TEXCOORD7;
-    nointerpolation half falloff : TEXCOORD8;
+    half2  corner : TEXCOORD1;
+    half3  col    : TEXCOORD2;
+    nointerpolation half weight : TEXCOORD3;
+    float4 screenPos : TEXCOORD4;
+    float4 grabPos : TEXCOORD5;
+    half2  uv1    : TEXCOORD6;
+    nointerpolation half hull : TEXCOORD7;
+    float2 ditherUv : TEXCOORD8;
+    nointerpolation half falloff : TEXCOORD9;
     UNITY_VERTEX_OUTPUT_STEREO
 };
 
@@ -546,6 +547,7 @@ void ApplyCollapse(inout v2f o) {
 v2f VertCommon(appdata v, float push) {
     v2f o;
     UNITY_SETUP_INSTANCE_ID(v);
+    UNITY_INITIALIZE_OUTPUT(v2f, o);
     UNITY_INITIALIZE_VERTEX_OUTPUT_STEREO(o);
 
     Surfel s = Reconstruct3DJ(v, push);
@@ -555,7 +557,14 @@ v2f VertCommon(appdata v, float push) {
         return o;
     }
 
-    o.pos = UnityObjectToClipPos(float4(s.pObj, 1));
+    v.vertex = float4(s.pObj, 1);
+
+    #ifdef UNITY_PASS_SHADOWCASTER
+    TRANSFER_SHADOW_CASTER(o)
+    #else
+    o.pos = UnityObjectToClipPos(v.vertex);
+    #endif
+
     o.screenPos = ComputeScreenPos(o.pos);
     o.grabPos = ComputeGrabScreenPos(o.pos);
     o.corner = s.corner;

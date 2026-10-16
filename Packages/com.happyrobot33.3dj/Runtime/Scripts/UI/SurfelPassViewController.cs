@@ -576,6 +576,7 @@ namespace com.happyrobot33.holographicreprojector {
                 decodeMaterial.SetFloat("_BlueNoiseJitter", flag);
             } else {
                 decodeMaterial.SetFloat("_Shape", flag);
+                ApplyBlendMode(syncedBlendMode);
             }
         }
 
@@ -589,7 +590,8 @@ namespace com.happyrobot33.holographicreprojector {
 
             if (mode == 4) {
                 decodeMaterial.shader = accumulateShader;
-                decodeMaterial.renderQueue = 3000;
+                decodeMaterial.renderQueue = 2450;
+                decodeMaterial.SetOverrideTag("RenderType", "TransparentCutout");
                 return;
             }
 
@@ -620,6 +622,7 @@ namespace com.happyrobot33.holographicreprojector {
             }
 
             bool masked = mode >= 2;
+            bool rectangle = decodeMaterial.GetFloat("_Shape") > 0.5f && decodeMaterial.GetFloat("_UseFalloffTex") < 0.5f;
             float zWrite = 1f;
 
             if (mode == 0) {
@@ -642,12 +645,20 @@ namespace com.happyrobot33.holographicreprojector {
 
             decodeMaterial.SetFloat("_DstBlend", dstBlend);
             int renderQueue = 3000;
+            string renderType = "Transparent";
 
             if (masked) {
                 renderQueue = 2450;
+                renderType = "TransparentCutout";
+            }
+
+            if (mode == 3 && rectangle) {
+                renderQueue = 2000;
+                renderType = "Opaque";
             }
 
             decodeMaterial.renderQueue = renderQueue;
+            decodeMaterial.SetOverrideTag("RenderType", renderType);
             float stencilRef = 0f;
 
             if (mode == 0) {

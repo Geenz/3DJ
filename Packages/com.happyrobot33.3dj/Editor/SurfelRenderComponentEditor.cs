@@ -268,7 +268,7 @@ namespace com.happyrobot33.holographicreprojector.Editor {
 
                 decodeMat.shader = accumulateShader;
                 decodeMat.SetFloat("_Mode", 4f);
-                decodeMat.renderQueue = (int)UnityEngine.Rendering.RenderQueue.Transparent;
+                decodeMat.renderQueue = (int)UnityEngine.Rendering.RenderQueue.AlphaTest;
 
                 decodeMat.SetFloat("_Dither", 1f);
                 decodeMat.EnableKeyword("_DITHER_BLUENOISE");

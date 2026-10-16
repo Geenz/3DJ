@@ -93,6 +93,32 @@ Shader "SurfelAtlas/Decode" {
 
         CGINCLUDE
         #include "SurfelAtlasDecode.cginc"
+
+        half4 fragColor(v2f i) : SV_Target {
+            #if defined(_MODE_CUTOUT)
+            half fall = 2.5;
+            #elif defined(_MODE_TWOPASS)
+            half fall = i.falloff;
+            #else
+            half fall = (half)_Falloff;
+            #endif
+            half cov = Coverage(i.corner, i.uv1, fall);
+            clip(cov - 1e-4);
+            cov *= i.hull;
+            clip(cov - 1e-4);
+            half alpha = (half)saturate(cov * i.weight * _FalloffMult);
+
+            #if defined(_MODE_DITHER)
+            clip(DitherClip3DJ(i, alpha));
+            return half4(i.col, 1);
+            #elif defined(_MODE_CUTOUT)
+            clip(alpha - _Cutoff);
+            return half4(i.col, 1);
+            #else
+            return half4(i.col, alpha);
+            #endif
+        }
+
         ENDCG
 
         Pass {
@@ -145,29 +171,44 @@ Shader "SurfelAtlas/Decode" {
 
             v2f vertColor(appdata v) { return VertCommon(v, 0); }
 
-            half4 fragColor(v2f i) : SV_Target {
-                #if defined(_MODE_CUTOUT)
-                half fall = 2.5;
-                #elif defined(_MODE_TWOPASS)
-                half fall = i.falloff;
-                #else
-                half fall = (half)_Falloff;
-                #endif
-                half cov = Coverage(i.corner, i.uv1, fall);
-                clip(cov - 1e-4);
-                cov *= i.hull;
-                clip(cov - 1e-4);
-                half alpha = (half)saturate(cov * i.weight * _FalloffMult);
+            ENDCG
+        }
 
-                #if defined(_MODE_DITHER)
-                clip(DitherClip3DJ(i, alpha));
-                return half4(i.col, 1);
-                #elif defined(_MODE_CUTOUT)
-                clip(alpha - _Cutoff);
-                return half4(i.col, 1);
+        Pass {
+            Name "ShadowCaster"
+            Tags { "LightMode" = "ShadowCaster" }
+            ZWrite On
+            ZTest LEqual
+
+            CGPROGRAM
+            #pragma vertex vertShadow
+            #pragma fragment fragShadow
+            #pragma target 4.0
+            #pragma multi_compile_shadowcaster
+            #pragma multi_compile UNITY_PASS_SHADOWCASTER
+            #pragma multi_compile_local _MODE_TWOPASS _MODE_ZWRITE _MODE_DITHER _MODE_CUTOUT
+            #pragma shader_feature_local _IGNOREGLOBALPLAYBACKCONTROL_ON
+            #pragma shader_feature_local _LOCKPOSITION_ON
+            #pragma shader_feature_local _LOCKROTATION_ON
+            #pragma shader_feature_local _DITHER_BAYER _DITHER_BLUENOISE _DITHER_FRACTAL
+            #pragma shader_feature_local _FALLOFFTEX_ON
+
+            v2f vertShadow(appdata v) {
+                #if defined(_MODE_DITHER) || defined(_MODE_CUTOUT)
+                return VertCommon(v, 0);
                 #else
-                return half4(i.col, alpha);
+                v2f o;
+                UNITY_SETUP_INSTANCE_ID(v);
+                UNITY_INITIALIZE_OUTPUT(v2f, o);
+                UNITY_INITIALIZE_VERTEX_OUTPUT_STEREO(o);
+                ApplyCollapse(o);
+                return o;
                 #endif
+            }
+
+            float4 fragShadow(v2f i) : SV_Target {
+                fragColor(i);
+                SHADOW_CASTER_FRAGMENT(i)
             }
 
             ENDCG

@@ -36,10 +36,15 @@ namespace com.happyrobot33.holographicreprojector.Editor {
                 }
 
                 if (mode == 4) {
-                    int accumulateQueue = (int)UnityEngine.Rendering.RenderQueue.Transparent;
+                    int accumulateQueue = (int)UnityEngine.Rendering.RenderQueue.AlphaTest;
 
                     if (mat.renderQueue != accumulateQueue) {
                         mat.renderQueue = accumulateQueue;
+                        changed = true;
+                    }
+
+                    if (mat.GetTag("RenderType", false) != "TransparentCutout") {
+                        mat.SetOverrideTag("RenderType", "TransparentCutout");
                         changed = true;
                     }
 
@@ -50,9 +55,11 @@ namespace com.happyrobot33.holographicreprojector.Editor {
                     continue;
                 }
 
+                bool rectangle = mat.GetFloat("_Shape") > 0.5f && mat.GetFloat("_UseFalloffTex") < 0.5f;
                 float zWrite, srcBlend, dstBlend, stencilRef, stencilComp;
                 int queue;
-                BlendState(mode, out zWrite, out srcBlend, out dstBlend, out queue, out stencilRef, out stencilComp);
+                string renderType;
+                BlendState(mode, rectangle, out zWrite, out srcBlend, out dstBlend, out queue, out renderType, out stencilRef, out stencilComp);
 
                 if (mat.GetFloat("_ZWrite") != zWrite) {
                     mat.SetFloat("_ZWrite", zWrite);
@@ -71,6 +78,11 @@ namespace com.happyrobot33.holographicreprojector.Editor {
 
                 if (mat.renderQueue != queue) {
                     mat.renderQueue = queue;
+                    changed = true;
+                }
+
+                if (mat.GetTag("RenderType", false) != renderType) {
+                    mat.SetOverrideTag("RenderType", renderType);
                     changed = true;
                 }
 
@@ -149,7 +161,7 @@ namespace com.happyrobot33.holographicreprojector.Editor {
         }
 
         // Modes 0-3 only; mode 4 (Accumulate) uses a different shader and pass setup entirely.
-        public static void BlendState(int mode, out float zWrite, out float srcBlend, out float dstBlend, out int queue, out float stencilRef, out float stencilComp) {
+        public static void BlendState(int mode, bool rectangle, out float zWrite, out float srcBlend, out float dstBlend, out int queue, out string renderType, out float stencilRef, out float stencilComp) {
             bool masked = mode >= 2;
 
             zWrite = 1f;
@@ -161,11 +173,18 @@ namespace com.happyrobot33.holographicreprojector.Editor {
             srcBlend = (int)UnityEngine.Rendering.BlendMode.SrcAlpha;
             dstBlend = (int)UnityEngine.Rendering.BlendMode.OneMinusSrcAlpha;
             queue = (int)UnityEngine.Rendering.RenderQueue.Transparent;
+            renderType = "Transparent";
 
             if (masked) {
                 srcBlend = (int)UnityEngine.Rendering.BlendMode.One;
                 dstBlend = (int)UnityEngine.Rendering.BlendMode.Zero;
                 queue = (int)UnityEngine.Rendering.RenderQueue.AlphaTest;
+                renderType = "TransparentCutout";
+            }
+
+            if (mode == 3 && rectangle) {
+                queue = (int)UnityEngine.Rendering.RenderQueue.Geometry;
+                renderType = "Opaque";
             }
 
             stencilRef = 0f;

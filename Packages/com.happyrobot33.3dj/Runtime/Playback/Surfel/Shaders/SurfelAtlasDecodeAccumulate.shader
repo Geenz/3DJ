@@ -85,7 +85,7 @@ Shader "SurfelAtlas/DecodeAccumulate" {
     }
 
     SubShader {
-        Tags { "RenderType" = "Transparent" "Queue" = "Transparent" "IgnoreProjector" = "True" }
+        Tags { "RenderType" = "TransparentCutout" "Queue" = "AlphaTest" "IgnoreProjector" = "True" }
 
         Cull Off
 
@@ -175,7 +175,7 @@ Shader "SurfelAtlas/DecodeAccumulate" {
         GrabPass { "_SurfelAcc" }
 
         Pass {
-            ZWrite Off
+            ZWrite On
             ZTest LEqual
             Blend One Zero
             Stencil { Ref 1 Comp Equal }
@@ -201,6 +201,32 @@ Shader "SurfelAtlas/DecodeAccumulate" {
                 float wsum = acc.a / _AccScale;
                 float3 col = acc.rgb / max(acc.a, 1e-5);
                 return float4(lerp(bg.rgb, col, saturate(wsum)), 1);
+            }
+
+            ENDCG
+        }
+
+        Pass {
+            Name "ShadowCaster"
+            Tags { "LightMode" = "ShadowCaster" }
+            ZWrite On
+            ZTest LEqual
+
+            CGPROGRAM
+            #pragma vertex vertFlat
+            #pragma fragment fragShadow
+            #pragma target 4.0
+            #pragma multi_compile_shadowcaster
+            #pragma multi_compile UNITY_PASS_SHADOWCASTER
+            #pragma shader_feature_local _IGNOREGLOBALPLAYBACKCONTROL_ON
+            #pragma shader_feature_local _LOCKPOSITION_ON
+            #pragma shader_feature_local _LOCKROTATION_ON
+            #pragma shader_feature_local _DITHER_BAYER _DITHER_BLUENOISE _DITHER_FRACTAL
+            #pragma shader_feature_local _FALLOFFTEX_ON
+
+            float4 fragShadow(v2f i) : SV_Target {
+                fragDepth(i);
+                SHADOW_CASTER_FRAGMENT(i)
             }
 
             ENDCG
